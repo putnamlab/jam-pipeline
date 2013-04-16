@@ -1,5 +1,9 @@
 #+OPTIONS:  toc:nil num:nil timestamp:nil author:nil orgversion:nil validation:nil creator:nil v:nil validate:nil
 
+* JAM pipeline steps
+
+** Organization of the input data directory:
+
 
 *** Copying data to and from the Rice.edu clusters:
 
@@ -31,3 +35,7 @@ Options:
   -b, --backup          If specified, copy from the cluster to the local
                         repository
   -d, --debug           
+
+
+#+END_SRC bash
+
