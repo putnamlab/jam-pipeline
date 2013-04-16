@@ -4,16 +4,19 @@
 import os
 from optparse import OptionParser
 
-parser = OptionParser()
-parser.add_option("-l","--login",dest="login",default="nhp1")
-parser.add_option("-H","--host",dest="host",default="davinci")
-parser.add_option("-r","--clusterRoot", dest="clusterRoot", default = "/scratch/nhp1/projects")
-#parser.add_option("-R","--labRoot", dest="labRoot", default = "nputnam@10.68.3.163:/Volumes/Sequence/projects")
-parser.add_option("-R","--labRoot", dest="labRoot", default = "/Volumes/Sequence/projects")
-parser.add_option("-P","--project", dest="project" )
-parser.add_option("-S","--skipSequence", dest="skipSequence", action="store_true" )
-parser.add_option("-B","--skipBambus", dest="skipBambus", action="store_true" )
-parser.add_option("-b","--backup", dest="backup", action="store_true" )
+parser = OptionParser(usage="""usage: %prog [options]
+
+This script generates rsync commands to help synchronize the parts of a JAM project from your local machine to your compute cluster.
+
+""")
+parser.add_option("-l","--login",dest="login",default="nhp1",help="compute cluster username")
+parser.add_option("-H","--host",dest="host",default="davinci", help="compute cluster host name")
+parser.add_option("-r","--clusterRoot", dest="clusterRoot", default = "/scratch/nhp1/projects", help="Path to the JAM projects root on the compute cluster")
+parser.add_option("-R","--labRoot", dest="labRoot", default = "/Volumes/Sequence/projects", help="Path to the local JAM projects root directory")
+parser.add_option("-P","--project", dest="project", help="The name of the JAM project to sync.  Usually in the form of Genus_species." )
+parser.add_option("-S","--skipSequence", dest="skipSequence", action="store_true", help="If specified, skip syncing sequence" )
+parser.add_option("-B","--skipBambus", dest="skipBambus", action="store_true", help="If specified, skip Bambus files" )
+parser.add_option("-b","--backup", dest="backup", action="store_true", help="If specified, copy from the cluster to the local repository" )
 parser.add_option("-d","--debug", dest="debug", action="store_true" )
 
 (options, args) = parser.parse_args()
