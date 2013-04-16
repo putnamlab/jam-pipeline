@@ -1,0 +1,37 @@
+#+OPTIONS:  toc:nil num:nil timestamp:nil author:nil orgversion:nil validation:nil creator:nil v:nil validate:nil
+
+* JAM pipeline steps
+
+** Organization of the input data directory:
+
+
+*** Copying data to and from the Rice.edu clusters:
+
+This script figures out the rsync command you want for moving data / results to / from the cluster.
+
+It's setup not to copy subdirectories called "tmp"
+
+#+BEGIN_SRC bash
+Usage: syncJamProjectDir.py [options]
+
+This script generates rsync commands to help synchronize the parts of a JAM project from your local machine to your compute cluster.
+
+
+
+Options:
+  -h, --help            show this help message and exit
+  -l LOGIN, --login=LOGIN
+                        compute cluster username
+  -H HOST, --host=HOST  compute cluster host name
+  -r CLUSTERROOT, --clusterRoot=CLUSTERROOT
+                        Path to the JAM projects root on the compute cluster
+  -R LABROOT, --labRoot=LABROOT
+                        Path to the local JAM projects root directory
+  -P PROJECT, --project=PROJECT
+                        The name of the JAM project to sync.  Usually in the
+                        form of Genus_species.
+  -S, --skipSequence    If specified, skip syncing sequence
+  -B, --skipBambus      If specified, skip Bambus files
+  -b, --backup          If specified, copy from the cluster to the local
+                        repository
+  -d, --debug           
