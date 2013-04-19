@@ -98,28 +98,29 @@ Creates sqlite databaset file sequencing.db
 
 """
     parser = OptionParser(usage=usage)
-    parser.add_option("--dbroot", action="store", dest="dbroot", default=jam_root+"/database")
+    parser.add_option("--dbroot", action="store", dest="dbroot",
+                      default=jam_root+"/database", help="location of the database files.  Defaults to $JAM_ROOT/database")
     # print os.path.expanduser('~/Desktop/Dropbox/SeqPipe/Database')
     parser.add_option("--projects", action="store", dest="projects",
-                      default='/Volumes/Sequence/projects')
+                      default=jam_root+"/projects", help="location of the projects dir.  Defaults to $JAM_ROOT/projects")
     parser.add_option("--incoming", action="store", dest="incoming",
-                      default='/Volumes/Sequence/incoming')
+                      default=jam_root+"/incoming", help="location of the incoming sequence dir.  Defaults to $JAM_ROOT/incoming")
     # Files to get table values for lanes and sequence files
     parser.add_option("--lanes",    action="store", dest="lanesF",
-                      default='lanes.tsv')
+                      default='lanes.tsv', help="name of the lanes table.  defaults to lanes.tsv")
     parser.add_option("--seqfiles", action="store", dest="seqfilesF",
-                      default='seqfiles.tsv')
+                      default='seqfiles.tsv', help="name of the table of sequence files.  defaults to seqfiles.tsv")
     parser.add_option("--species", action="store", dest="speciesF",
-                      default='species.tsv')
+                      default='species.tsv', help="name of species table file.  defaults to species.tsv")
     parser.add_option("--gspec", action="store", dest="gspec",
-                      default='Aluca', help="Genome and species, if only doing one.")
+                      default='Aluca', help="Species to process, in 5-letter mnemonic form, eg Lpoly for Limulus polyphemus")
     # Copy files up to the (davinci) cluster
-    parser.add_option("--upload", action="store_true", dest="upload", default=False)
+    parser.add_option("--upload", action="store_true", dest="upload", default=False, help="attempt to upload files to the computer cluster")
 
     # Use option "--reload" to drop old tables, then create & load anew
     parser.add_option("--drop",   action="store_true", dest="drop", default=False, help="drop old tables, then create & load anew")
     # Force linking, clobbering old files or links
-    parser.add_option("--force",  action="store_true", dest="force", default=False)
+    parser.add_option("--force",  action="store_true", dest="force", default=False, help="force creation of links, even if they already exist.")
 
     (options, args) = parser.parse_args()
     # print "options:", options
