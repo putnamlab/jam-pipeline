@@ -5,7 +5,8 @@
 ** Organization of the input data directory:
 
 
-*** Copying data to and from the Rice.edu clusters:
+
+** Copying data to and from the Rice.edu clusters:
 
 This script figures out the rsync command you want for moving data / results to / from the cluster.
 
@@ -35,9 +36,50 @@ Options:
   -b, --backup          If specified, copy from the cluster to the local
                         repository
   -d, --debug           
-
-
 #+END_SRC
+
+** Sequence trimming and masking
+
+#+BEGIN_SRC bash
+kmerpipe.py -h
+Usage: kmerpipe.py [options]
+
+for example:   kmerpipe.py --dbroot . --drop --projects ../projects/ --gspec Ltest
+
+Creates sqlite databaset file sequencing.db
+
+
+
+Options:
+  -h, --help            show this help message and exit
+  --dbroot=DBROOT       location of the database files.  Defaults to
+                        $JAM_ROOT/database
+  --projects=PROJECTS   location of the projects dir.  Defaults to
+                        $JAM_ROOT/projects
+  --clusterProjects=CLUSTERPROJECTS
+                        location of the projects dir on the remote compute
+                        cluster (e.g. /scratch/nhp1/projects).  Defaults to
+                        the local projects root
+  --incoming=INCOMING   location of the incoming sequence dir.  Defaults to
+                        $JAM_ROOT/incoming
+  --lanes=LANESF        name of the lanes table.  defaults to lanes.tsv
+  --seqfiles=SEQFILESF  name of the table of sequence files.  defaults to
+                        seqfiles.tsv
+  --species=SPECIESF    name of species table file.  defaults to species.tsv
+  --gspec=GSPEC         Species to process, in 5-letter mnemonic form, eg
+                        Lpoly for Limulus polyphemus
+  --upload              Attempt to upload files to the computer cluster
+  --serial              Generate serial commands rather than qsub commands
+  --debug               Print debugging output
+  --drop                drop old tables, then create & load anew
+  --force               force creation of links, even if they already exist.
+#+END_SRC
+
+
+** Next 
+
+Lorem ipsum
+
 
 
 
