@@ -84,9 +84,21 @@ def loadtable(conn, file):
     conn.commit()
 
 def main():
-    parser = OptionParser()
-    parser.add_option("--dbroot", action="store", dest="dbroot",
-                      default=os.path.expanduser('~/Desktop/Dropbox/SeqPipe/Database'))
+
+    
+    jam_root = os.environ.get('JAM_ROOT')
+    if not jam_root:
+        jam_root = "."
+
+    usage="""kmerpipe.py [options]
+
+for example:   kmerpipe.py --dbroot . --drop --projects ../projects/ --gspec Ltest
+
+Creates sqlite databaset file sequencing.db
+
+"""
+    parser = OptionParser(usage=usage)
+    parser.add_option("--dbroot", action="store", dest="dbroot", default=jam_root+"/database")
     # print os.path.expanduser('~/Desktop/Dropbox/SeqPipe/Database')
     parser.add_option("--projects", action="store", dest="projects",
                       default='/Volumes/Sequence/projects')
@@ -100,12 +112,12 @@ def main():
     parser.add_option("--species", action="store", dest="speciesF",
                       default='species.tsv')
     parser.add_option("--gspec", action="store", dest="gspec",
-                      default='Aluca')
+                      default='Aluca', help="Genome and species, if only doing one.")
     # Copy files up to the (davinci) cluster
     parser.add_option("--upload", action="store_true", dest="upload", default=False)
 
     # Use option "--reload" to drop old tables, then create & load anew
-    parser.add_option("--drop",   action="store_true", dest="drop", default=False)
+    parser.add_option("--drop",   action="store_true", dest="drop", default=False, help="drop old tables, then create & load anew")
     # Force linking, clobbering old files or links
     parser.add_option("--force",  action="store_true", dest="force", default=False)
 
