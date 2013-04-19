@@ -37,7 +37,9 @@ Options:
   -d, --debug           
 
 
-#+END_SRC bash
+#+END_SRC
+
+
 
 
 
