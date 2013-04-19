@@ -53,7 +53,7 @@ def localOrNonlocalF(pathroot, path):
     if os.path.exists(path):
         return path
     elif os.path.exists(os.path.join(pathroot, path)):
-        return path
+        return os.path.join(pathroot, path)
     else:
         return None
 
@@ -103,6 +103,8 @@ Creates sqlite databaset file sequencing.db
     # print os.path.expanduser('~/Desktop/Dropbox/SeqPipe/Database')
     parser.add_option("--projects", action="store", dest="projects",
                       default=jam_root+"/projects", help="location of the projects dir.  Defaults to $JAM_ROOT/projects")
+    parser.add_option("--clusterProjects", action="store", dest="clusterProjects",
+                      default=False, help="location of the projects dir on the remote compute cluster (e.g. /scratch/nhp1/projects).  Defaults to the local projects root")
     parser.add_option("--incoming", action="store", dest="incoming",
                       default=jam_root+"/incoming", help="location of the incoming sequence dir.  Defaults to $JAM_ROOT/incoming")
     # Files to get table values for lanes and sequence files
@@ -114,8 +116,12 @@ Creates sqlite databaset file sequencing.db
                       default='species.tsv', help="name of species table file.  defaults to species.tsv")
     parser.add_option("--gspec", action="store", dest="gspec",
                       default='Aluca', help="Species to process, in 5-letter mnemonic form, eg Lpoly for Limulus polyphemus")
+
     # Copy files up to the (davinci) cluster
-    parser.add_option("--upload", action="store_true", dest="upload", default=False, help="attempt to upload files to the computer cluster")
+    parser.add_option("--upload", action="store_true", dest="upload", default=False, help="Attempt to upload files to the computer cluster")
+
+    parser.add_option("--serial", action="store_true", dest="serial", default=False, help="Generate serial commands rather than qsub commands")
+    parser.add_option("--debug", action="store_true", dest="debug", default=False, help="Print debugging output")
 
     # Use option "--reload" to drop old tables, then create & load anew
     parser.add_option("--drop",   action="store_true", dest="drop", default=False, help="drop old tables, then create & load anew")
@@ -126,14 +132,20 @@ Creates sqlite databaset file sequencing.db
     # print "options:", options
     # print "args: ", args
 
+    if not options.clusterProjects:
+        options.clusterProjects = options.projects
+
     # Connect to database
     conn = sqlite3.connect(os.path.join(options.dbroot, 'sequencing.db'))
     c = conn.cursor()
 
+    print options.dbroot
     # Read each file f into a table 
     for f in [localOrNonlocalF(options.dbroot, options.lanesF),
               localOrNonlocalF(options.dbroot, options.seqfilesF),
               localOrNonlocalF(options.dbroot, options.speciesF)]:
+        if options.debug:
+            print f
         if options.drop:
 	    c.execute('DROP TABLE IF EXISTS ' + (tablename(f)))
         loadtable(conn, f)
@@ -160,24 +172,35 @@ Creates sqlite databaset file sequencing.db
             readRoot = "%s%d_%s" % (gspec, laneid, library)
             newName = "%s_%s" % (readRoot, direction)
         print newName
-        newDir = "%s/sequence/raw" % organism
-        if not os.path.isdir("%s/%s" % (options.projects, newDir)):
-            subprocess.call("mkdir -p %s/%s" % (options.projects, newDir),
-                            shell=True)
+        newDir    = os.path.join(options.projects,organism,"sequence","raw") # "%s/sequence/raw" % organism
+        maskedDir = os.path.join(options.projects,organism,"sequence","FastaMasked")
+
+        newDirRemote    = os.path.join(options.clusterProjects,organism,"sequence","raw") # "%s/sequence/raw" % organism
+        maskedDirRemote = os.path.join(options.clusterProjects,organism,"sequence","FastaMasked")
+
+        if not os.path.isdir(newDir):
+            subprocess.call("mkdir -p %s" % (newDir),shell=True)
+        if not os.path.isdir(maskedDir):
+            subprocess.call("mkdir -p %s" % (maskedDir),shell=True)
+
             #subprocess.call("ssh havlak@davinci.rice.edu mkdir -p /scratch/havlak/%s" % newDir,
             #                shell=True)
             #subprocess.call("ssh havlak@davinci.rice.edu mkdir -p /scratch/havlak/SeqPipe/%s/FastaMasked" % gspec,
             #                shell=True)
             #subprocess.call("ssh havlak@davinci.rice.edu mkdir -p /scratch/havlak/SeqPipe/%s/Kmers" % gspec,
             #                shell=True)
-        subprocess.call("ln -s %s %s/%s/%s %s/%s/%s.fastq.gz"
+        subprocess.call("ln -s %s %s %s.fastq.gz"
                         % ("-f" if options.force else "",
-                           options.incoming, path, file, options.projects, newDir, newName),
+                            os.path.join(options.incoming, path, file),  os.path.join( newDir, newName)),
                         shell=True)
-        cmdfile.write(('echo "gunzip -c /scratch/havlak/%s/%s.fastq.gz ' % (newDir, newName))
-                      + ('| /home/havlak/bin/fastq2pfa.pl -m 20 -soft 30 -bs %d ' % batchsize)
+        if options.serial:
+            cmdfile.write('gzcat  %s.fastq.gz | fastq2pfa.pl -m 20 -soft 30 -bs %d -bnum %d -p %s -suf %s -zq %d | gzip > %s.fam.gz\n' %
+                          ( os.path.join( newDir, newName), batchsize,batch, readRoot, direction, zq,  os.path.join( maskedDir, newName)))
+        else:
+            cmdfile.write(('echo "gunzip -c %s/%s.fastq.gz ' % (newDirRemote, newName))
+                      + ('| fastq2pfa.pl -m 20 -soft 30 -bs %d ' % batchsize)
                       + ('-bnum %d -p %s -suf %s -zq %d ' % (batch, readRoot, direction, zq))
-                      + ('| gzip > /scratch/havlak/SeqPipe/%s/FastaMasked/%s.fam.gz" ' % (gspec, newName))
+                      + ('| gzip > %s/%s.fam.gz" ' % ( maskedDirRemote, newName))
                       + ('| qsub -l cput=4:00:00 -d $PWD -N %s -m e -q serial -V\n' % newName) )
     cmdfile.close()
     if options.upload:
@@ -187,3 +210,5 @@ Creates sqlite databaset file sequencing.db
     conn.close()
 
 main()
+
+
