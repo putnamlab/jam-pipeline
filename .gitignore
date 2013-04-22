@@ -14,3 +14,11 @@ x1.gz
 x2.gz
 
 *.org~
+
+*.org~
+
+doc/jam-pipeline-doc.org~
+
+Makefile~
+
+*.md~
