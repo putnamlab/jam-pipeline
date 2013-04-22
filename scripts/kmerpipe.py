@@ -155,7 +155,7 @@ Creates sqlite databaset file sequencing.db
     c.execute("SELECT ReadsPerFile, Path, File, Gspec_ck, Organism, LaneID, Library, batch, ZeroQual, direction " +
               "FROM lanes, seqfiles " +
               "WHERE lanes.ID = LaneID " +
-              "AND Gspec_ck = '%s'" % options.gspec)
+              "AND Gspec_ck = '%s' ORDER BY Library, batch, direction, LaneID" % options.gspec)
     cmdfile = open(options.gspec + ".cmds", "w")
     for row in c:
         (readsPerFile, path, file,
