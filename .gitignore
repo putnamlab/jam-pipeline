@@ -1,0 +1,14 @@
+
+Ltest.cmds
+
+*.html
+
+*.bash~
+
+*.py~
+
+*.pyc
+
+x1.gz
+
+x2.gz
