@@ -2,7 +2,7 @@ import unittest
 import os
 import random
 
-jam_executables=['kmerpipe.py','fastq2pfa.pl','GenomeBVcount']
+jam_executables=['kmerpipe.py','fastq2fam.pl','GenomeBVcount']
 other_executables=['gzip','gzcat']
 
 def which(program):
