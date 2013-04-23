@@ -15,6 +15,7 @@ https://dl.dropboxusercontent.com/u/8774493/JAMtestSequenceQuick.tgz and https:/
   - Uncompress the archive:  cd ~;  gzcat JAMtestSequenceQuick.tgz | tar -xvf -
   - export JAM_ROOT=~/JAMtestSequenceQuick
   - cd ~/jam-pipeline
+  - export PATH=~/jam-pipeline/scripts:$PATH
   - make test
   - look at the files and directories that were created in $JAM_ROOT/JAMtestSequenceQuick/Limulus_testpolyphemus/
 
