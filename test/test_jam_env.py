@@ -36,7 +36,7 @@ class TestJamEnv(unittest.TestCase):
         for fn in self.jam_executables + self.other_executables :
             print fn
             fpath = which(fn)
-#            print fpath
+            print fpath
             self.assertTrue( os.path.isfile(fpath)  )
             self.assertTrue( os.access(fpath, os.X_OK) )
 
@@ -46,4 +46,8 @@ class TestJamEnv(unittest.TestCase):
 if __name__ == '__main__':
     #unittest.main()
     suite = unittest.TestLoader().loadTestsFromTestCase(TestJamEnv)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+    r=unittest.TextTestRunner(verbosity=2).run(suite)
+    if not r.wasSuccessful():
+        exit(1)
+    else:
+        exit(0)
