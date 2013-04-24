@@ -38,8 +38,8 @@ string OligoToolsCredits =
   "Part of the Putnam Lab JAM project, copyright 2009-2013 by Nik Putnam and Paul Havlak, Rice University.\n" 
   "  https://github.com/putnamlab/jam-pipeline\n"
   "Licensed under the Creative Commons Attribution 3.0 Unported License. To view a copy of this license, visit\n"
-  "  http://creativecommons.org/licenses/by/3.0\n";
+  "  http://creativecommons.org/licenses/by/3.0\n"
   "Employs OligoTools, initially developed at BCM-HGSC as a successor to the Atlas Kmer libraries:\n"
   "  http://www.hgsc.bcm.tmc.edu/content/atlas-whole-genome-assembly-suite\n"
-  "      SimpleMerHash.{cc,hh}\n"
+  "      SimpleMerHash.{cc,hh}\n";
 #endif
