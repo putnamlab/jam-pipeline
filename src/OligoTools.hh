@@ -34,7 +34,7 @@
 
 #ifndef OLIGOTOOLS_HH
 #define OLIGOTOOLS_HH 1
-string OligoToolsCredits = 
+char OligoToolsCredits[] = 
   "Part of the Putnam Lab JAM project, copyright 2009-2013 by Nik Putnam and Paul Havlak, Rice University.\n" 
   "  https://github.com/putnamlab/jam-pipeline\n"
   "Licensed under the Creative Commons Attribution 3.0 Unported License. To view a copy of this license, visit\n"
