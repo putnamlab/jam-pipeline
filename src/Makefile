@@ -51,7 +51,11 @@ AR       = ar cr
 # make cleanall;  removes temporary files, the library, and programs
 # ----------------------------------------------------------------------------
 
-default: libgzstream.a
+binaries=GenomeBVcount GenomeMmTable
+
+default: libgzstream.a $(binaries)
+
+all: default
 
 gzstream.o : gzstream.C gzstream.h
 	${CXX} ${CPPFLAGS} -c -o gzstream.o gzstream.C
@@ -59,14 +63,24 @@ gzstream.o : gzstream.C gzstream.h
 libgzstream.a : gzstream.o
 	${AR} libgzstream.a gzstream.o
 
-%: %.cc libgzstream.a
-	${CXX} -o $@ $< ${LDFLAGS} ${CPPFLAGS}
-
 clean :
 	rm *.o
 
 cleanall :
 	rm *.o libgzstream.a test_gzip test_gunzip
+
+install:
+	bindir=`uname -s`-`uname -m` ; \
+	mkdir -p ../bin/$$bindir ; \
+	for f in $(binaries); do \
+		cp $$f ../bin/$$bindir ; \
+		ln -fs $$bindir/$$f ../bin/ ; \
+	done
+
+
+%: %.cc libgzstream.a
+	${CXX} -o $@ $< ${LDFLAGS} ${CPPFLAGS}
+
 
 # ============================================================================
 # EOF
