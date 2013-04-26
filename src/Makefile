@@ -51,7 +51,7 @@ AR       = ar cr
 # make cleanall;  removes temporary files, the library, and programs
 # ----------------------------------------------------------------------------
 
-binaries=GenomeBVcount GenomeMmTable
+binaries=GenomeBVcount GenomeMmTable GenomeLinkContigs GenomeMmContigs GenomeMmEdges GenomeMmScan GenomeReads2KmerContigs
 
 default: libgzstream.a $(binaries)
 
