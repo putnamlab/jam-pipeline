@@ -64,6 +64,7 @@
 #ifndef DEFINED_OLIGOSEQ
 #define DEFINED_OLIGOSEQ 1
 #include "OligoGen.hh"
+#include <string.h>
 #include <iostream>
 #include <fstream>
 
