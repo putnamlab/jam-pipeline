@@ -23,7 +23,7 @@ public:
   }
   inline bool check(char flag) {
     if (flag >= '@')
-      return !!(bitvector & (1 << (flag - 64)));
+      return ( (1 << (flag - 64)) == (bitvector & (1 << (flag - 64))));
     else
       return true;
   }
