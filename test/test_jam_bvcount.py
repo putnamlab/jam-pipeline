@@ -1,3 +1,11 @@
+
+# (c) 2012-2013 Rice University & Nicholas H. Putnam
+#
+# This file is part of jam-pipeline
+#
+# This work is licensed under the Creative Commons Attribution 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by/3.0/.
+
+
 import unittest
 import os
 #import random
@@ -23,12 +31,16 @@ class TestJamBV(unittest.TestCase):
             self.cksum[c[0]]=c[1]
         f.close()
 
-    def test_make_trim_commands(self):
+#    def x_test_make_bv_commands(self):
 #        wc = subprocess.call(["kmerpipe.py","--drop","--gspec","Ltest","--debug","--force","--serial"])
-        cmd = "DriveGenomeBVcount.py --serial -C gbv_commands.txt %s/projects/Limulus_testpolyphemus"%(os.environ['JAM_ROOT'])
-        wc = subprocess.call(cmd.split()) 
         
-    def test_trim(self):
+    def test_bvcount(self):
+
+        cmd = "DriveGenomeBVcount.py --serial -C gbv_commands.txt -a %s %s/projects/Limulus_testpolyphemus"%(os.environ['JAM_ANALYSIS_DIR'],os.environ['JAM_ROOT'])
+        print cmd
+        wc = subprocess.call(cmd.split()) 
+
+
         cf=open("gbv_commands.txt")
         while True:
             l = cf.readline()

@@ -36,13 +36,18 @@ class TestJamSNPmers(unittest.TestCase):
             #print m.group(1)
         m=re.search("^(.*)\/[^/]+",bvfiles[0])
         kmers_dir = m.group(1)
-        cmd = "cat " + " ".join(bvfiles) + " | GenomeMmTable -o 23 -H 100000000 > %s/snpmers.txt 2> %s/snpmers.err" % (kmers_dir,kmers_dir)
+        cmd = "cat " + " ".join(bvfiles) + " | GenomeMmTable -o 23 -H 100000000 > %s/MmTable.txt 2> %s/MmTable.err" % (kmers_dir,kmers_dir)
         print cmd
         wc = subprocess.call(["bash","-c",cmd]) 
 
-        cmd = "cat %s/snpmers.txt | awk '$5==3 || $5==21 || $5==12' > %s/snpmers-filt.txt"  % (kmers_dir,kmers_dir)
+        cmd = "cat %s/MmTable.txt | awk '$5==3 || $5==21 || $5==12' > %s/snpmers-filt.txt"  % (kmers_dir,kmers_dir)
         print cmd
         wc = subprocess.call(["bash","-c",cmd]) 
+
+        cmd = "cat %s/MmTable.txt | perl -ane 'if ($F[0]==0 && hex($F[1])%%11==5)  {print}' > %s/MmTable.11slice5.txt"  % (kmers_dir,kmers_dir)
+        print cmd
+        wc = subprocess.call(["bash","-c",cmd]) 
+
 
         fh = open("%s/snpmers-filt.txt"%kmers_dir,"rb")
         d = fh.readlines()

@@ -11,9 +11,12 @@ all:
 
 
 test:
-	python test/test_jam_env.py
-	python test/test_jam_trim.py
-	python test/test_jam_bvcount.py
-	python test/test_jam_SNPmers.py
+	export JAM_ANALYSIS_DIR=`date "+JAM-%Y.%m.%d"` ; \
+	python test/test_jam_env.py ; \
+	python test/test_jam_trim.py ; \
+	python test/test_jam_bvcount.py ; \
+	python test/test_jam_SNPmers.py ; \
+	python test/test_jam_kmerEdges.py 
+
 
 
