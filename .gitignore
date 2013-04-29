@@ -22,3 +22,6 @@ doc/jam-pipeline-doc.org~
 Makefile~
 
 *.md~
+*.cc~
+*.hh~
+.DS_store
