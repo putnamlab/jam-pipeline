@@ -108,7 +108,7 @@ def ordering(x):
 def hash_to_args(h):
     samples = h.keys()
     samples.sort(key=ordering)
-    r=" / ".join(map(str,[ " ".join([project_dir+"/sequence/FastaMasked/"+x for x in h[i] ]) for i in samples ]))
+    r=" / ".join(map(str,[ " ".join([project_dir+"/sequence/FastaMasked/"+x for x in sorted(h[i]) ]) for i in samples ]))
     return r
 
 filelist= hash_to_args(files_to_count)
