@@ -25,7 +25,7 @@ bool debugging(const char which[]) {
 
 void PrintOptions() {
   cerr << "Option values are:\n"<<
-    "   -o {OligoLen}    ["<< OptOligoLen << "] Length of oligos (typically in 16..32).\n" <<
+    "   -o {OligoLen}    ["<< OptOligoLen << "] Length of oligos (odd, usually >= 21, must be in 9..31).\n" <<
     "   -H {HashSize}    ["<< OptHashSize    <<"] Number of cells in hash table (can choose based on InputTable).\n" <<
     "   -S {Slicing[:Slice]} [" << OptHashSlicing << ":" << OptHashSlice << "] Slicing factor and slice for unpartnered kmers.\n" <<
     "   -x {SoftMasking} ["<< OptSoftMasking <<"] Treat lowercase as masked?\n" <<
@@ -95,6 +95,7 @@ void parseSlicing(char *p) {
 int SetupOptions(int argc, char**argv)
 {
   // Default values
+  OptOligoLen    = 23;        // -o
   OptHashSize    = get_prime(99999);         // -H
   OptHashSlicing = 11;        // -S <small_prime>[:<hashslice in 0..small_prime-1>]
   OptHashSlice   = 0;         // override with :# on OptHashSlicing
@@ -144,6 +145,11 @@ int SetupOptions(int argc, char**argv)
     }
   }
  EndOptions:
+  if (!(OptOligoLen % 2) || (OptOligoLen < 9) || (OptOligoLen > 31)) {
+    PrintOptions();
+    cerr << "Argument error: -o " << OptOligoLen << "; OligoLen must be odd, in [9..31].\n";
+    exit(-1);
+  }
   if (debugging("o")) PrintOptions();
   return i;
 }
@@ -241,19 +247,21 @@ int main(int argc, char *argv[]) {
   // because we're unlikely to be interested in precise counts higher than that --
   // and we can get them from the kmers detail if needed.
   // (Higher-frequency kmers will be counted as having frequence 0x3FFF.)
-  const Oligos::Index MAXFREQp1 = 0x4000UL;
-  long histogram[MAXFREQp1] = { 0 };
+  const Oligos::Index FREQLIMIT = 0x4000UL;
+  long histogram[FREQLIMIT] = { 0 };
+  const Oligos::Index MAXFREQ = min(FREQLIMIT, 1UL << oh.Info1Len) - 1;
+  cerr << "# Histogram infinity value:\t0x" << hex << MAXFREQ << dec << "\t" << MAXFREQ << endl;
   Oligos::Oligo* op;
 
   cout << hex;
   for (op = oh.first(); op; op = oh.next(op)) {
     Oligos::Index index = op - oh.hash;
     Oligos::Index freq = oh.getInfo1(*op);
-    if (freq < MAXFREQp1) {
+    if (freq <= MAXFREQ) {
       histogram[freq]++;
     }
     else {
-      histogram[MAXFREQp1 - 1]++;
+      histogram[MAXFREQ]++;
     }
     if (freq < 2)
       continue;
@@ -268,7 +276,7 @@ int main(int argc, char *argv[]) {
   cerr << "# total_bases:\t"   << bases << endl;
   cerr << "# total_unambig:\t" << unambiguous << endl;
   cerr << "# total_oligos:\t"  << oligos << endl;
-  for (long hi = 1; hi < (1 << oh.Info1Len); hi++) {
+  for (long hi = 1; hi <= MAXFREQ; hi++) {
     if (histogram[hi])
       cerr << "# " << hi << "\t" << histogram[hi] << endl;
   }
