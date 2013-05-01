@@ -194,7 +194,7 @@ Creates sqlite databaset file sequencing.db
                             os.path.join(options.incoming, path, file),  os.path.join( newDir, newName)),
                         shell=True)
         if options.serial:
-            cmdfile.write('gzcat  %s.fastq.gz | fastq2fam.pl -m 20 -soft 30 -bs %d -bnum %d -p %s -suf %s -zq %d | gzip > %s.fam.gz\n' %
+            cmdfile.write('gunzip -c  %s.fastq.gz | fastq2fam.pl -m 20 -soft 30 -bs %d -bnum %d -p %s -suf %s -zq %d | gzip > %s.fam.gz\n' %
                           ( os.path.join( newDir, newName), batchsize,batch, readRoot, direction, zq,  os.path.join( maskedDir, newName)))
         else:
             cmdfile.write(('echo "gunzip -c %s/%s.fastq.gz ' % (newDirRemote, newName))

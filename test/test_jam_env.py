@@ -3,7 +3,7 @@ import os
 import random
 
 jam_executables=['kmerpipe.py','fastq2fam.pl','GenomeBVcount']
-other_executables=['gzip','gzcat']
+other_executables=['gzip','gunzip']
 
 def which(program):
 
