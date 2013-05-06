@@ -17,7 +17,7 @@ test:
 	python test/test_jam_bvcount.py ; \
 	python test/test_jam_SNPmers.py ; \
 	python test/test_jam_kmerEdges.py ; \
-	python test/test_jam_kmerContigs.py 
-
+	python test/test_jam_kmerContigs.py ; \
+	python test/test_jam_mmscan.py
 
 

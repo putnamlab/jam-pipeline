@@ -13,14 +13,15 @@ use Getopt::Long;
 
 my $count = 0;
 my $help = 0;
-my $fwdtag = '.f_';
-my $revtag = '.r_';
+my $fwdtag = '_f.';
+my $revtag = '_r.';
 my $libname = "";
 die "Options problem\n" unless
   &GetOptions(
 							"fwdtag|f=s"  => \$fwdtag,
 							"revtag|r=s"  => \$revtag,
 							"libname|n=s" => \$libname,
+			
 							"help|h"	    => \$help,
 						 );
 
@@ -42,10 +43,11 @@ for my $file (@ARGV) {
 
 	unless ($libname) {
 		my $out_file = "> $file";
-		$out_file =~ s/$fwdtag/_/;
+		$out_file =~ s/$fwdtag/_mated./;
 		if ($out_file =~ /\.gz$/) {
 			$out_file = "| gzip $out_file";
 		}
+		print "$out_file\n";
 		open OUT, $out_file;
 	}
 	# Change input separater to read in whole FASTA records at a time
